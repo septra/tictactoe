@@ -1,10 +1,12 @@
+from copy import deepcopy
 from grid import Grid
 
 class State(object):
 
-    def __init__(self, player, grid_state):
+    def __init__(self, turn_played_player, turn_to_play_player, grid_state):
 
-        self.player = player
+        self.turn_played_player = turn_played_player
+        self.turn_to_play_player = turn_to_play_player
         self.grid_state = grid_state
 
 
@@ -40,3 +42,8 @@ class State(object):
         else:
             return False
 
+    def __repr__(self):
+        return 'Played: {}\nNext Player: {} {}'.format(
+                self.turn_played_player, 
+                self.turn_to_play_player, 
+                str(self.grid_state))

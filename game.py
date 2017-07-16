@@ -1,81 +1,93 @@
-import random
+from copy import deepcopy
+from grid import Grid
+from state import State
+from player import Player
 
-class Game(object):
-    def __init__(self):
-        self.xs = 'X'
-        self.os = 'O'
-        self.grid = [[None, None, None],
-                     [None, None, None],
-                     [None, None, None]]
-        self.turn = random.choice([self.xs, self.os])
+class GameNode(object):
 
-        self.over = False
+    def __init__(self, state, parent=None):
+        self.parent = parent
+        self.state = state
+        self.child = None
 
-        print("It's %s's turn to begin" % self.turn)
+    def add_node(self, node):
+        self.child = node
+        self.child.parent = self
 
-    def play(self, row, col):
-
-        if self.over is True:
-           print("Game is Over! Start a new one.")
-           return None
-
-        # To convert into 0 based index
-        row -= 1
-        col -= 1
-
-        if self.grid[row][col]:
-            raise AssignmentError("Position already taken!")
-        else:
-            self.grid[row][col] = self.turn
-
-            self.check()
-
-            self.turn = self.xs if self.turn == self.os else self.os
-
-        print(self)
+    def all_possible_children(self):
+        player = self.state.turn_to_play_player
+        next_player = 'X' if player is 'O' else 'O'
+        states = []
+        for ix, raw_state in enumerate(self.state.grid_state.raw_state):
+            if raw_state is None:
+                new_state = list(deepcopy(self.state.grid_state.raw_state))
+                new_state[ix] = player
+                states.append(GameNode(State(
+                        player, next_player, Grid(tuple(new_state))), self))
+        return states
 
 
-    def check(self):
-        if None != self.grid[0][0] == self.grid[0][1] == self.grid[0][2] or \
-           None != self.grid[1][0] == self.grid[1][1] == self.grid[1][2] or \
-           None != self.grid[2][0] == self.grid[2][1] == self.grid[2][2] or \
-           None != self.grid[0][0] == self.grid[1][0] == self.grid[2][0] or \
-           None != self.grid[0][1] == self.grid[1][1] == self.grid[2][1] or \
-           None != self.grid[0][2] == self.grid[1][2] == self.grid[2][2] or \
-           None != self.grid[0][0] == self.grid[1][1] == self.grid[2][2] or \
-           None != self.grid[0][2] == self.grid[1][1] == self.grid[2][0]:
-               self.over = True
-               print("Game Over! %s Wins." % self.turn)
+if __name__ == '__main__':
+    print('Welcome to tic-tac-toe!')
+    
+    player_1_name = None
+    while not player_1_name:
+        player_1_name = input('\tPlease enter Player 1\'s name: ')
 
+    player_1_char = None
+    while player_1_char not in ['X', 'O']:
+        player_1_char = input('\tPlease enter Player 1\'s char: ')
 
-    def __str__(self):
-        output = []
-        for row in self.grid:
-            output.append("{:^3}|{:^3}|{:^3}".format( 
-                    *[piece 
-                       if piece is not None 
-                       else ' ' 
-                       for piece in row]))
+    player_2_name = None
+    while not player_2_name:
+        player_2_name = input('\tPlease enter Player 2\'s name: ')
 
-        return "\n".join(output)
+    player_2_char = 'X' if player_1_char is 'O' else 'O'
 
-    def __repr__(self):
-        output = []
-        for row in self.grid:
-            output.append("{:^3}|{:^3}|{:^3}".format( 
-                    *[piece     
-                       if piece is not None 
-                       else ' ' 
-                       for piece in row])) 
+    print('Let's Begin!\n')
 
-        return "\n".join(output)
+    init_state = State(' ', player_1_char, Grid(tuple([None] * 9)))
+    init_node = GameNode(init_state)
 
+    current_node = init_node
 
-class AssignmentError(Exception):
-    def __init__(self, expression, message):
-        self.expression = expression
-        self.message = message
+    while not current_node.state.is_final():
+        print(current_node.state)
+        move = input('Enter move (eg. 'a1'): ')
+        new_node = deepcopy(current_node)
 
+        if move[0] == 'a':
+            col_ix = 3
+        elif move[0] == 'b':
+            col_ix = 4
+        elif move[0] == 'c':
+            col_ix = 5
+        
+        if move[1] == '1':
+            row_ix = -3
+        elif move[1] == '2':
+            row_ix = 0
+        elif move[1] == '3':
+            row_ix = 3
+
+        move_ix = col_ix + row_ix
+
+        new_raw_state = list(new_node.state.grid_state.raw_state)
+        new_raw_state[move_ix] = new_node.state.turn_to_play_player
+        new_raw_state = tuple(new_raw_state)
+
+        new_node.state.grid_state = Grid(new_raw_state)
+        new_node.state.turn_played_player = current_node.state.turn_to_play_player
+        new_node.state.turn_to_play_player = 'X' if new_node.state.turn_played_player is 'O' else 'O'
+
+        current_node.child = new_node
+        new_node.parent = current_node
+
+        current_node = deepcopy(new_node)
+
+    print(current_node.state)
+    print('Game ended!')
+    print('{} Wins!'.format(current_node.state.turn_played_player))
 
 
 

@@ -42,11 +42,12 @@ class Grid(object):
 
     def __repr__(self):
 
-        row1 = '{:^3}|{:^3}|{:^3}'.format(self.a1, self.b1, self.c1)
-        row2 = '{:^3}|{:^3}|{:^3}'.format(self.a2, self.b2, self.c2)
-        row3 = '{:^3}|{:^3}|{:^3}'.format(self.a3, self.b3, self.c3)
+        row1 = '1.\t{:^3}|{:^3}|{:^3}'.format(self.a1, self.b1, self.c1)
+        row2 = '2.\t{:^3}|{:^3}|{:^3}'.format(self.a2, self.b2, self.c2)
+        row3 = '3.\t{:^3}|{:^3}|{:^3}'.format(self.a3, self.b3, self.c3)
+        footer = ' \t{:^3} {:^3} {:^3}'.format('a', 'b', 'c')
 
-        output = '\n' + '\n'.join([row3, row2, row1])
+        output = '\n' + '\n'.join([row3, row2, row1]) + '\n\n' + footer
 
         return output
 
