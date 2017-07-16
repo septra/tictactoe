@@ -85,7 +85,8 @@ if __name__ == '__main__':
     ongoingGame = True
 
     while ongoingGame:
-        if game.over: break
+        if game.over:
+            break
         playerInput = raw_input("%s> " % game.turn)
         print("")
         playerInput = playerInput.split(",")
