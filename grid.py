@@ -12,6 +12,16 @@ class Grid(object):
         positions (a1, a2, a3, b1, b2, b3, c1, c2, c3)
 
     """
+
+    @staticmethod
+    def is_valid_gameplay(grid):
+        num_x_plays = sum([1 if n == 'X' else 0 for n in grid.raw_state])
+        num_o_plays = sum([1 if n == 'O' else 0 for n in grid.raw_state])
+
+        if 0 <= num_x_plays + num_o_plays <= 9:
+            return abs(num_x_plays - num_o_plays) <= 1
+        else:
+            return False
     
     def __init__(self, state):
 

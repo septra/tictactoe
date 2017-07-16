@@ -11,10 +11,14 @@ class GridTest(unittest.TestCase):
         self.raw_state_1 = ('X', None, None, 'O', 'X', None, 'O', 'O', 'X')
         self.raw_state_2 = ('X', None, None, 'O', 'X', None, 'O', 'O', 'X')
         self.raw_state_3 = ('O', None, None, 'O', 'O',  'X', 'X', 'X', 'O')
+        self.raw_state_4 = ('O', None, None, 'O', 'X',  'X', 'X', 'X', 'X')
+        self.raw_state_5 = ('O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O')
 
         self.grid_1 = Grid(self.raw_state_1)
         self.grid_2 = Grid(self.raw_state_2)
         self.grid_3 = Grid(self.raw_state_3)
+        self.grid_4 = Grid(self.raw_state_4)
+        self.grid_5 = Grid(self.raw_state_5)
 
 
     def test_grid_equality(self):
@@ -34,6 +38,13 @@ class GridTest(unittest.TestCase):
         self.assertEqual(str(self.grid_1), display_1)
         self.assertEqual(str(self.grid_2), display_2)
         self.assertEqual(str(self.grid_3), display_3)
+
+    def test_classmethod_is_valid_gameplay(self):
+
+        self.assertEqual(Grid.is_valid_gameplay(self.grid_1), True)
+        self.assertEqual(Grid.is_valid_gameplay(self.grid_3), True) 
+        self.assertEqual(Grid.is_valid_gameplay(self.grid_4), False) 
+        self.assertEqual(Grid.is_valid_gameplay(self.grid_5), False) 
 
 
 class PlayerTest(unittest.TestCase):
@@ -79,8 +90,6 @@ class StateTest(unittest.TestCase):
         self.assertEqual(self.state_3.is_final(), False)
 
     
-
-
 if __name__ == '__main__':
     unittest.main()
 
