@@ -1,4 +1,3 @@
-from copy import deepcopy
 from grid import Grid
 
 class State(object):

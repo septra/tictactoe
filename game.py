@@ -3,6 +3,7 @@ from grid import Grid
 from state import State
 from player import Player
 
+
 class GameNode(object):
 
     def __init__(self, state, parent=None):
@@ -53,7 +54,7 @@ if __name__ == '__main__':
 
     while not current_node.state.is_final():
         print(current_node.state)
-        move = input('Enter move (eg. 'a1'): ')
+        move = input("Enter move (eg. 'a1'): ")
         new_node = deepcopy(current_node)
 
         if move[0] == 'a':
@@ -83,11 +84,12 @@ if __name__ == '__main__':
         current_node.child = new_node
         new_node.parent = current_node
 
-        current_node = deepcopy(new_node)
+        current_node = new_node
 
     print(current_node.state)
-    print('Game ended!')
-    print('{} Wins!'.format(current_node.state.turn_played_player))
 
-
+    if current_node.state.is_final() and not current_node.state.check_win():
+        print("Game Draw! Thanks for playing.")
+    elif current_node.state.check_win():
+        print('{} Wins!'.format(current_node.state.turn_played_player))
 
