@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     player_2_char = 'X' if player_1_char is 'O' else 'O'
 
-    print('Let's Begin!\n')
+    print('Let\'s Begin!\n')
 
     init_state = State(' ', player_1_char, Grid(tuple([None] * 9)))
     init_node = GameNode(init_state)
